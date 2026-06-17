@@ -1,0 +1,17 @@
+{
+    "name": "Pal Digital",
+    "short_name": "Pal Digital",
+    "description": "Custom Software, CRM & Automation Solutions",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#050505",
+    "theme_color": "#050505",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/favicon.ico",
+            "sizes": "64x64",
+            "type": "image/x-icon"
+        }
+    ]
+}
