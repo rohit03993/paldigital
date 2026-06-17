@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pal-digital-v1';
+const CACHE_NAME = 'pal-digital-v2';
 const ASSETS = ['/', '/build/assets/app.css', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
@@ -18,6 +18,13 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+    const url = new URL(event.request.url);
+
+    // Never intercept admin or Livewire — avoids cached/broken admin responses
+    if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/livewire')) {
+        return;
+    }
+
     if (event.request.method !== 'GET') return;
 
     event.respondWith(
