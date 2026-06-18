@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Filament\Forms\ImageUpload;
 use App\Models\SiteSetting;
+use App\Support\UploadPath;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -97,10 +98,23 @@ class ManageSiteSettings extends Page implements HasForms
         $data = $this->form->getState();
 
         foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $value = ! empty($value) ? (is_string(reset($value)) ? reset($value) : null) : null;
+            if (in_array($key, ['site_logo', 'site_favicon', 'seo_default_og_image'], true)) {
+                if (UploadPath::isExplicitlyRemoved($value)) {
+                    SiteSetting::set($key, null);
+                } else {
+                    $path = UploadPath::fromFilamentState($value);
+                    if ($path !== null) {
+                        SiteSetting::set($key, $path);
+                    }
+                }
+                continue;
             }
-            SiteSetting::set($key, $value);
+
+            if (is_array($value)) {
+                $value = UploadPath::fromFilamentState($value);
+            }
+
+            SiteSetting::set($key, is_string($value) ? $value : null);
         }
 
         Notification::make()->title('Settings saved')->success()->send();

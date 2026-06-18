@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Filament\Forms\ImageUpload;
 use App\Models\SiteSetting;
+use App\Support\UploadPath;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -165,8 +166,14 @@ class ManageAboutContent extends Page implements HasForms
 
         foreach ($data as $key => $value) {
             if ($key === 'about_ceo_photo') {
-                $path = is_array($value) && ! empty($value) ? (is_string(reset($value)) ? reset($value) : null) : null;
-                SiteSetting::set($key, $path);
+                if (UploadPath::isExplicitlyRemoved($value)) {
+                    SiteSetting::set($key, null);
+                } else {
+                    $path = UploadPath::fromFilamentState($value);
+                    if ($path !== null) {
+                        SiteSetting::set($key, $path);
+                    }
+                }
                 continue;
             }
 
