@@ -27,4 +27,23 @@ class ImageUpload
 
         return $field;
     }
+
+    public static function headerLogo(string $name, string $directory): FileUpload
+    {
+        return FileUpload::make($name)
+            ->image()
+            ->disk('public')
+            ->directory($directory)
+            ->imageEditor()
+            ->imageEditorMode(3)
+            ->imageEditorAspectRatios([
+                '3:1',
+                '16:9',
+                '4:1',
+                '1:1',
+                null,
+            ])
+            ->imageEditorEmptyFillColor('#000000')
+            ->helperText('Upload → click the image → drag the crop box to select what shows in the header → confirm → Save.');
+    }
 }

@@ -51,9 +51,8 @@ class ManageSiteSettings extends Page implements HasForms
         return $form
             ->schema([
                 Forms\Components\Section::make('Brand & Logo')->schema([
-                    ImageUpload::make('site_logo', 'site')
-                        ->label('Site Logo')
-                        ->helperText('Best: horizontal header logo (500×120px PNG). Square/vertical files work — we show the top icon in the header + site name beside it.'),
+                    ImageUpload::headerLogo('site_logo', 'site')
+                        ->label('Header logo'),
                     ImageUpload::make('site_favicon', 'site')
                         ->label('Favicon')
                         ->imageEditorAspectRatios(['1:1'])

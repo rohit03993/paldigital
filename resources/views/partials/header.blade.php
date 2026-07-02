@@ -7,15 +7,12 @@
 <header class="fixed top-0 left-0 right-0 z-50 bg-pal-black/90 backdrop-blur-xl border-b border-white/5 safe-top">
     <div class="container-pal mx-auto px-4 sm:px-6 lg:px-8">
         <div class="site-header-bar">
-            <a href="{{ route('home') }}" class="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0 z-10" aria-label="{{ $siteName }} home">
+            <a href="{{ route('home') }}" class="flex items-center shrink-0 min-w-0 z-10" aria-label="{{ $siteName }} home">
                 @if($logo)
                     @include('partials.site-logo', ['variant' => 'header', 'logo' => $logo, 'siteName' => $siteName])
-                    <span class="font-display font-bold text-base sm:text-lg lg:text-xl tracking-tight leading-none hidden sm:inline">
-                        <span class="text-pal-yellow">Pal</span> Digital
-                    </span>
                 @else
                     <div class="w-10 h-10 lg:w-11 lg:h-11 bg-gradient-to-br from-pal-yellow to-yellow-400 rounded-xl flex items-center justify-center font-extrabold text-pal-black text-base lg:text-lg shadow-lg shadow-pal-yellow/20 shrink-0">P</div>
-                    <span class="font-bold text-base lg:text-xl tracking-tight hidden sm:inline">
+                    <span class="font-bold text-base lg:text-xl tracking-tight hidden sm:inline ms-2.5">
                         <span class="text-pal-yellow">Pal</span> Digital
                     </span>
                 @endif
