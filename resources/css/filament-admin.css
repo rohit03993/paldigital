@@ -1,0 +1,13 @@
+/* Filament image editor — allow zoom out / pan on large uploads */
+.fi-fo-file-upload-editor {
+    contain: unset !important;
+}
+
+.fi-fo-file-upload-editor .cropper-container {
+    max-height: min(72vh, 760px) !important;
+}
+
+.fi-fo-file-upload-editor .cropper-wrap-box,
+.fi-fo-file-upload-editor .cropper-canvas {
+    overflow: visible !important;
+}
