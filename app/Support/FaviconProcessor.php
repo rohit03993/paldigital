@@ -62,7 +62,6 @@ class FaviconProcessor
         imagecopyresampled($dest, $src, 0, 0, $srcX, $srcY, $outputSize, $outputSize, $cropSize, $cropSize);
         imagedestroy($src);
 
-        self::stripDarkBackground($dest, $outputSize);
         self::applyAntialiasedCircleMask($dest, $outputSize);
 
         $newPath = preg_replace('/-round\.png$/', '', $path);
@@ -111,25 +110,6 @@ class FaviconProcessor
         imagealphablending($src, true);
 
         return $src;
-    }
-
-    private static function stripDarkBackground(\GdImage $image, int $size): void
-    {
-        imagealphablending($image, false);
-        imagesavealpha($image, true);
-
-        for ($x = 0; $x < $size; $x++) {
-            for ($y = 0; $y < $size; $y++) {
-                $rgba = imagecolorat($image, $x, $y);
-                $red = ($rgba >> 16) & 0xFF;
-                $green = ($rgba >> 8) & 0xFF;
-                $blue = $rgba & 0xFF;
-
-                if ($red <= 45 && $green <= 45 && $blue <= 45) {
-                    imagesetpixel($image, $x, $y, imagecolorallocatealpha($image, 0, 0, 0, 127));
-                }
-            }
-        }
     }
 
     private static function applyAntialiasedCircleMask(\GdImage $image, int $size): void

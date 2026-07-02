@@ -63,6 +63,6 @@ class ImageUpload
             ->imageEditorViewportHeight(512)
             ->imageEditorAspectRatios(['1:1'])
             ->imageEditorEmptyFillColor('#000000')
-            ->helperText('Crop tight around the PD icon only (zoom out first). Saved as a round favicon with transparent background.');
+            ->helperText('Crop tight around the PD icon. Round corners are applied automatically — keep the dark background in your crop.');
     }
 }
