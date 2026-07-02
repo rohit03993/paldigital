@@ -8,7 +8,7 @@
         <div class="flex items-center justify-between h-14 lg:h-[72px]">
             <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0">
                 @if($logo)
-                    <img src="{{ $logo }}" alt="{{ $setting('site_name', 'Pal Digital') }}" class="h-8 lg:h-9 w-auto max-w-[120px] object-contain">
+                    <img src="{{ $logo }}" alt="{{ $setting('site_name', 'Pal Digital') }}" class="h-11 sm:h-12 lg:h-14 w-auto max-w-[180px] sm:max-w-[200px] lg:max-w-[260px] object-contain object-left">
                 @else
                     <div class="w-9 h-9 lg:w-10 lg:h-10 bg-gradient-to-br from-pal-yellow to-yellow-400 rounded-xl flex items-center justify-center font-extrabold text-pal-black text-base lg:text-lg shadow-lg shadow-pal-yellow/20">P</div>
                     <span class="font-bold text-base lg:text-xl tracking-tight hidden xs:inline">
