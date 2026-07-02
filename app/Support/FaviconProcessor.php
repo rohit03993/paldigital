@@ -14,8 +14,7 @@ class FaviconProcessor
             return $path;
         }
 
-        $fullPath = $disk->path($path);
-        $src = self::loadImage($fullPath);
+        $src = self::loadImage($disk->path($path));
 
         if (! $src) {
             return $path;
@@ -23,54 +22,110 @@ class FaviconProcessor
 
         $width = imagesx($src);
         $height = imagesy($src);
-        $size = min($width, $height);
-        $srcX = (int) (($width - $size) / 2);
-        $srcY = (int) (($height - $size) / 2);
+        $cropSize = min($width, $height);
+        $srcX = (int) (($width - $cropSize) / 2);
+        $srcY = (int) (($height - $cropSize) / 2);
+        $outputSize = self::normalizeSize($cropSize);
 
-        $dest = imagecreatetruecolor($size, $size);
+        $dest = imagecreatetruecolor($outputSize, $outputSize);
         imagesavealpha($dest, true);
+        imagealphablending($dest, false);
         $transparent = imagecolorallocatealpha($dest, 0, 0, 0, 127);
         imagefill($dest, 0, 0, $transparent);
+        imagealphablending($dest, true);
 
-        imagecopyresampled($dest, $src, 0, 0, $srcX, $srcY, $size, $size, $size, $size);
+        imagecopyresampled($dest, $src, 0, 0, $srcX, $srcY, $outputSize, $outputSize, $cropSize, $cropSize);
         imagedestroy($src);
 
-        $radius = $size / 2;
-        $radiusSquared = $radius * $radius;
+        self::stripDarkBackground($dest, $outputSize);
+        self::applyAntialiasedCircleMask($dest, $outputSize);
 
-        for ($x = 0; $x < $size; $x++) {
-            for ($y = 0; $y < $size; $y++) {
-                $dx = $x - $radius + 0.5;
-                $dy = $y - $radius + 0.5;
+        $newPath = preg_replace('/-round\.png$/', '', $path);
+        $newPath = preg_replace('/\.[^.]+$/', '', $newPath) . '-round.png';
 
-                if (($dx * $dx) + ($dy * $dy) > $radiusSquared) {
-                    imagesetpixel($dest, $x, $y, $transparent);
-                }
-            }
+        if ($disk->exists($newPath) && $newPath !== $path) {
+            $disk->delete($newPath);
         }
-
-        $newPath = preg_replace('/\.[^.]+$/', '', $path) . '-round.png';
 
         if ($newPath !== $path && $disk->exists($path)) {
             $disk->delete($path);
         }
 
-        imagepng($dest, $disk->path($newPath));
+        imagealphablending($dest, false);
+        imagesavealpha($dest, true);
+        imagepng($dest, $disk->path($newPath), 9);
         imagedestroy($dest);
 
         return $newPath;
+    }
+
+    private static function normalizeSize(int $size): int
+    {
+        return max(32, min(192, $size));
     }
 
     private static function loadImage(string $fullPath): ?\GdImage
     {
         $extension = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
 
-        return match ($extension) {
+        $src = match ($extension) {
             'png' => @imagecreatefrompng($fullPath) ?: null,
             'jpg', 'jpeg' => @imagecreatefromjpeg($fullPath) ?: null,
             'webp' => function_exists('imagecreatefromwebp') ? (@imagecreatefromwebp($fullPath) ?: null) : null,
             'gif' => @imagecreatefromgif($fullPath) ?: null,
             default => null,
         };
+
+        if (! $src) {
+            return null;
+        }
+
+        imagesavealpha($src, true);
+        imagealphablending($src, true);
+
+        return $src;
+    }
+
+    private static function stripDarkBackground(\GdImage $image, int $size): void
+    {
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+
+        for ($x = 0; $x < $size; $x++) {
+            for ($y = 0; $y < $size; $y++) {
+                $rgba = imagecolorsforindex($image, imagecolorat($image, $x, $y));
+
+                if ($rgba['red'] <= 45 && $rgba['green'] <= 45 && $rgba['blue'] <= 45) {
+                    imagesetpixel($image, $x, $y, imagecolorallocatealpha($image, 0, 0, 0, 127));
+                }
+            }
+        }
+    }
+
+    private static function applyAntialiasedCircleMask(\GdImage $image, int $size): void
+    {
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+
+        $radius = $size / 2;
+        $transparent = imagecolorallocatealpha($image, 0, 0, 0, 127);
+
+        for ($x = 0; $x < $size; $x++) {
+            for ($y = 0; $y < $size; $y++) {
+                $dx = $x - $radius + 0.5;
+                $dy = $y - $radius + 0.5;
+                $distance = sqrt(($dx * $dx) + ($dy * $dy));
+
+                if ($distance > $radius) {
+                    imagesetpixel($image, $x, $y, $transparent);
+                } elseif ($distance > $radius - 1.5) {
+                    $edgeAlpha = (int) (127 * min(1, ($distance - ($radius - 1.5)) / 1.5));
+                    $rgba = imagecolorsforindex($image, imagecolorat($image, $x, $y));
+                    $alpha = min(127, max($rgba['alpha'], $edgeAlpha));
+                    $color = imagecolorallocatealpha($image, $rgba['red'], $rgba['green'], $rgba['blue'], $alpha);
+                    imagesetpixel($image, $x, $y, $color);
+                }
+            }
+        }
     }
 }

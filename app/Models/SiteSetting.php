@@ -21,7 +21,16 @@ class SiteSetting extends Model
             return $default;
         }
 
-        return str_starts_with($path, 'http') ? $path : asset('storage/' . ltrim($path, '/'));
+        $url = str_starts_with($path, 'http') ? $path : asset('storage/' . ltrim($path, '/'));
+
+        if ($key === 'site_favicon' && ! str_starts_with($path, 'http')) {
+            $fullPath = storage_path('app/public/' . ltrim($path, '/'));
+            if (is_file($fullPath)) {
+                $url .= '?v=' . filemtime($fullPath);
+            }
+        }
+
+        return $url;
     }
 
     public static function set(string $key, ?string $value): void
