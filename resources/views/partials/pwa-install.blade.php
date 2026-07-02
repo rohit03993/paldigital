@@ -40,13 +40,13 @@
     </div>
 </div>
 
-{{-- iOS install instructions --}}
+{{-- Install instructions (iOS + Android) --}}
 <div x-cloak
      x-show="$store.pwa.showInstructions"
      class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4"
      role="dialog"
      aria-modal="true"
-     aria-label="How to install on iPhone">
+     aria-label="How to install the app">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" @click="$store.pwa.closeInstructions()"></div>
 
     <div class="relative w-full max-w-sm rounded-2xl border border-white/10 bg-pal-card p-6 safe-bottom"
@@ -70,12 +70,13 @@
                 <div class="w-12 h-12 rounded-xl bg-pal-yellow flex items-center justify-center font-extrabold text-pal-black">P</div>
             @endif
             <div>
-                <h3 class="font-display font-bold text-lg">Add to Home Screen</h3>
-                <p class="text-sm text-pal-muted">Install {{ $siteName }} on your iPhone</p>
+                <h3 class="font-display font-bold text-lg"
+                    x-text="$store.pwa.instructionType === 'ios' ? 'Add to Home Screen' : 'Install App'"></h3>
+                <p class="text-sm text-pal-muted">Install {{ $siteName }} on your phone</p>
             </div>
         </div>
 
-        <ol class="space-y-4 text-sm text-pal-muted">
+        <ol class="space-y-4 text-sm text-pal-muted" x-show="$store.pwa.instructionType === 'ios'">
             <li class="flex items-start gap-3">
                 <span class="w-6 h-6 rounded-full bg-pal-yellow/15 text-pal-yellow text-xs font-bold flex items-center justify-center shrink-0">1</span>
                 <span>Tap the <strong class="text-white">Share</strong> button in Safari's toolbar (square with arrow up).</span>
@@ -87,6 +88,21 @@
             <li class="flex items-start gap-3">
                 <span class="w-6 h-6 rounded-full bg-pal-yellow/15 text-pal-yellow text-xs font-bold flex items-center justify-center shrink-0">3</span>
                 <span>Tap <strong class="text-white">Add</strong> — {{ $siteName }} will appear on your home screen.</span>
+            </li>
+        </ol>
+
+        <ol class="space-y-4 text-sm text-pal-muted" x-show="$store.pwa.instructionType === 'android'" x-cloak>
+            <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-pal-yellow/15 text-pal-yellow text-xs font-bold flex items-center justify-center shrink-0">1</span>
+                <span>Tap the <strong class="text-white">Install</strong> icon in your browser's address bar (monitor with a down arrow).</span>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-pal-yellow/15 text-pal-yellow text-xs font-bold flex items-center justify-center shrink-0">2</span>
+                <span>Or open the browser <strong class="text-white">menu</strong> (three dots) and choose <strong class="text-white">Install app</strong> or <strong class="text-white">Add to Home screen</strong>.</span>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="w-6 h-6 rounded-full bg-pal-yellow/15 text-pal-yellow text-xs font-bold flex items-center justify-center shrink-0">3</span>
+                <span>Confirm install — {{ $siteName }} will open like a native app from your home screen.</span>
             </li>
         </ol>
 

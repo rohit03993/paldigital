@@ -1,6 +1,7 @@
 <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-pal-dark/95 backdrop-blur-xl border-t border-white/10 safe-bottom"
      aria-label="Mobile navigation">
-    <div class="grid grid-cols-5 h-16 max-w-lg mx-auto">
+    <div class="grid h-16 max-w-lg mx-auto"
+         :class="$store.pwa.canShowInstall ? 'grid-cols-6' : 'grid-cols-5'">
         <a href="{{ route('home') }}"
            class="flex flex-col items-center justify-center gap-1 transition-colors active:scale-95
                   {{ request()->routeIs('home') ? 'text-pal-yellow' : 'text-pal-muted' }}">
@@ -27,6 +28,17 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             <span class="text-[10px] font-medium">Contact</span>
         </a>
+
+        <button type="button"
+                x-cloak
+                x-show="$store.pwa.canShowInstall"
+                @click="$store.pwa.openInstall()"
+                class="flex flex-col items-center justify-center gap-1 text-pal-muted active:scale-95 transition-transform">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            <span class="text-[10px] font-medium">Install</span>
+        </button>
 
         <button type="button" @click="mobileSheet = true"
                 class="flex flex-col items-center justify-center gap-1 transition-colors active:scale-95

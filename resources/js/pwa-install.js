@@ -55,9 +55,18 @@ function registerPwaStore() {
             isStandalone: isStandalone(),
             showBanner: false,
             showInstructions: false,
+            instructionType: 'android',
 
             get canShowInstall() {
-                return !this.isStandalone && (this.canInstall || this.isIos);
+                if (this.isStandalone) {
+                    return false;
+                }
+
+                if (this.canInstall || this.isIos) {
+                    return true;
+                }
+
+                return isMobile() && 'serviceWorker' in navigator;
             },
 
             dismissBanner() {
@@ -81,9 +90,8 @@ function registerPwaStore() {
                     return;
                 }
 
-                if (this.isIos) {
-                    this.showInstructions = true;
-                }
+                this.instructionType = this.isIos ? 'ios' : 'android';
+                this.showInstructions = true;
             },
 
             closeInstructions() {
@@ -96,7 +104,7 @@ function registerPwaStore() {
         if (window.__pwaDeferredPrompt) {
             applyDeferredPrompt(store, window.__pwaDeferredPrompt);
             window.__pwaDeferredPrompt = null;
-        } else if (store.isIos && !store.isStandalone) {
+        } else if (store.canShowInstall && isMobile()) {
             maybeShowBanner(store);
         }
     });
