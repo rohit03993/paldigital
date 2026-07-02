@@ -65,4 +65,21 @@ class ImageUpload
             ->imageEditorEmptyFillColor('#000000')
             ->helperText('Crop tight around the PD icon. Round corners are applied automatically — keep the dark background in your crop.');
     }
+
+    public static function framedLogo(string $name, string $directory): FileUpload
+    {
+        return FileUpload::make($name)
+            ->image()
+            ->disk('public')
+            ->directory($directory)
+            ->imageEditor()
+            ->imageEditorMode(1)
+            ->imageEditorAspectRatios([
+                null,
+                '16:9',
+                '4:3',
+                '1:1',
+            ])
+            ->helperText('Upload any size — the logo auto-fits inside the frame on the website.');
+    }
 }

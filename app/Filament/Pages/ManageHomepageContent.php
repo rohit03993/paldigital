@@ -35,6 +35,7 @@ class ManageHomepageContent extends Page implements HasForms
             'section_flagship_label', 'section_flagship_subtitle', 'section_flagship_badge', 'section_flagship_note',
             'section_demo_label', 'section_demo_heading', 'section_demo_text', 'section_demo_panel_title',
             'section_process_label', 'section_process_heading', 'section_process_subheading',
+            'section_clients_label', 'section_clients_heading', 'section_clients_subheading',
             'section_testimonials_label', 'section_testimonials_heading',
             'section_cta_label', 'section_cta_heading', 'section_cta_subheading', 'section_cta_btn_primary', 'section_cta_btn_secondary',
         ];
@@ -169,6 +170,11 @@ class ManageHomepageContent extends Page implements HasForms
                                 ->columns(3)
                                 ->collapsible()
                                 ->itemLabel(fn (array $state): ?string => $state['title'] ?? null),
+                        ]),
+                        Forms\Components\Section::make('Clients Carousel')->schema([
+                            Forms\Components\TextInput::make('section_clients_label')->label('Label'),
+                            Forms\Components\TextInput::make('section_clients_heading')->label('Heading'),
+                            Forms\Components\Textarea::make('section_clients_subheading')->label('Subheading')->rows(2),
                         ]),
                         Forms\Components\Section::make('Testimonials Section')->schema([
                             Forms\Components\TextInput::make('section_testimonials_label')->label('Label'),

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use App\Models\CaseStudy;
+use App\Models\Client;
 use App\Models\Industry;
 use App\Models\Portfolio;
 use App\Models\SeoMeta;
@@ -25,6 +26,7 @@ class HomeController extends Controller
             'flagship' => Solution::active()->where('is_flagship', true)->first(),
             'solutions' => Solution::active()->ordered()->get(),
             'testimonials' => Testimonial::active()->limit(6)->get(),
+            'clients' => Client::active()->get(),
         ]);
     }
 

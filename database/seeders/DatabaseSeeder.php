@@ -47,6 +47,9 @@ class DatabaseSeeder extends Seeder
             'address' => 'India',
             'site_url' => config('app.url'),
             'section_demo_panel_title' => 'What You Can Explore',
+            'section_clients_label' => 'Trusted By',
+            'section_clients_heading' => 'Brands We Have Worked With',
+            'section_clients_subheading' => 'Schools, businesses, and teams who trusted us to build software around how they work.',
         ];
 
         foreach ($settings as $key => $value) {

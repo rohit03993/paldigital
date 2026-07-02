@@ -122,6 +122,35 @@
         min-height: 4rem;
     }
 
+    .client-card {
+        @apply rounded-2xl border border-white/10 bg-pal-card/80 p-4 sm:p-5 flex flex-col gap-4 h-full;
+    }
+
+    .client-logo-frame {
+        @apply flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] overflow-hidden;
+        height: 5.5rem;
+        padding: 0.75rem 1rem;
+    }
+
+    @media (min-width: 640px) {
+        .client-logo-frame {
+            height: 6.5rem;
+        }
+    }
+
+    .client-logo-img {
+        @apply block max-h-full max-w-full w-auto h-auto object-contain;
+    }
+
+    .client-card-body {
+        @apply pt-1;
+    }
+
+    .client-carousel-btn {
+        @apply inline-flex items-center justify-center w-11 h-11 rounded-xl border border-white/15 text-white/80
+               hover:border-pal-yellow/50 hover:text-pal-yellow transition-colors disabled:opacity-30 disabled:pointer-events-none;
+    }
+
     @media (min-width: 1024px) {
         .site-header-bar {
             min-height: 5rem;

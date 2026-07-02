@@ -8,6 +8,7 @@
     @include('partials.home.flagship', ['flagship' => $flagship])
     @include('partials.home.demo-cta')
     @include('partials.home.process')
+    @include('partials.home.clients', ['clients' => $clients])
     @include('partials.home.testimonials', ['testimonials' => $testimonials])
     @include('partials.home.cta')
 @endsection
