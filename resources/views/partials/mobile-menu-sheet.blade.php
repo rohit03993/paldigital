@@ -38,6 +38,17 @@
                 @endforeach
             </div>
 
+            <button type="button"
+                    x-cloak
+                    x-show="$store.pwa.canShowInstall"
+                    @click="mobileSheet = false; $store.pwa.openInstall()"
+                    class="flex items-center justify-center gap-2 mt-4 p-4 rounded-2xl bg-pal-yellow/10 border border-pal-yellow/30 text-pal-yellow font-semibold text-sm w-full active:scale-[0.98] transition-transform">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Install App
+            </button>
+
             @php
                 $whatsapp = preg_replace('/[^0-9]/', '', \App\Models\SiteSetting::get('whatsapp', ''));
             @endphp

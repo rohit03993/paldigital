@@ -49,6 +49,7 @@
     @include('partials.mobile-bottom-nav')
     @include('partials.mobile-menu-sheet')
     @include('partials.whatsapp-button')
+    @include('partials.pwa-install')
     @include('partials.demo-modal')
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

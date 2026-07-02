@@ -66,6 +66,16 @@
                         <li><a href="{{ route('case-studies') }}" class="hover:text-pal-yellow transition-colors">Case Studies</a></li>
                         <li><a href="{{ route('blog') }}" class="hover:text-pal-yellow transition-colors">Blog</a></li>
                         <li><a href="{{ route('contact') }}" class="hover:text-pal-yellow transition-colors">Contact</a></li>
+                        <li x-cloak x-show="$store.pwa.canShowInstall">
+                            <button type="button"
+                                    @click="$store.pwa.openInstall()"
+                                    class="inline-flex items-center gap-2 hover:text-pal-yellow transition-colors text-left">
+                                <svg class="w-4 h-4 text-pal-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Install App
+                            </button>
+                        </li>
                     </ul>
                 </div>
 

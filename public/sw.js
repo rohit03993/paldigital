@@ -1,5 +1,5 @@
-const CACHE_NAME = 'pal-digital-v2';
-const ASSETS = ['/', '/build/assets/app.css', '/manifest.json'];
+const CACHE_NAME = 'pal-digital-v3';
+const ASSETS = ['/', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
