@@ -1,25 +1,28 @@
 @php
     $setting = fn($key, $default = '') => \App\Models\SiteSetting::get($key, $default);
     $logo = \App\Models\SiteSetting::asset('site_logo');
+    $siteName = $setting('site_name', 'Pal Digital');
 @endphp
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-pal-black/90 backdrop-blur-xl border-b border-white/5 safe-top">
     <div class="container-pal mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-14 lg:h-[72px]">
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0">
+        <div class="site-header-bar">
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0 min-w-0 z-10" aria-label="{{ $siteName }} home">
                 @if($logo)
-                    <img src="{{ $logo }}" alt="{{ $setting('site_name', 'Pal Digital') }}" class="h-11 sm:h-12 lg:h-14 w-auto max-w-[180px] sm:max-w-[200px] lg:max-w-[260px] object-contain object-left">
+                    @include('partials.site-logo', ['variant' => 'header', 'logo' => $logo, 'siteName' => $siteName])
                 @else
-                    <div class="w-9 h-9 lg:w-10 lg:h-10 bg-gradient-to-br from-pal-yellow to-yellow-400 rounded-xl flex items-center justify-center font-extrabold text-pal-black text-base lg:text-lg shadow-lg shadow-pal-yellow/20">P</div>
-                    <span class="font-bold text-base lg:text-xl tracking-tight hidden xs:inline">
+                    <div class="w-10 h-10 lg:w-11 lg:h-11 bg-gradient-to-br from-pal-yellow to-yellow-400 rounded-xl flex items-center justify-center font-extrabold text-pal-black text-base lg:text-lg shadow-lg shadow-pal-yellow/20 shrink-0">P</div>
+                    <span class="font-bold text-base lg:text-xl tracking-tight hidden sm:inline">
                         <span class="text-pal-yellow">Pal</span> Digital
                     </span>
                 @endif
             </a>
 
-            <p class="lg:hidden absolute left-1/2 -translate-x-1/2 font-display font-semibold text-sm tracking-tight text-white/95 pointer-events-none">
-                {{ $setting('site_name', 'Pal Digital') }}
-            </p>
+            @if(! $logo)
+                <p class="lg:hidden absolute left-1/2 -translate-x-1/2 font-display font-semibold text-sm tracking-tight text-white/95 pointer-events-none">
+                    {{ $siteName }}
+                </p>
+            @endif
 
             <nav class="hidden lg:flex items-center gap-0.5">
                 @foreach([
@@ -39,7 +42,7 @@
                 <a href="{{ route('contact') }}?type=consultation" class="btn-primary text-sm !py-2.5 !px-5 shadow-lg shadow-pal-yellow/20">Let's Talk</a>
             </div>
 
-            <div class="lg:hidden w-9"></div>
+            <div class="lg:hidden w-10 shrink-0" aria-hidden="true"></div>
         </div>
     </div>
 </header>

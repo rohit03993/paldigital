@@ -53,7 +53,7 @@ class ManageSiteSettings extends Page implements HasForms
                 Forms\Components\Section::make('Brand & Logo')->schema([
                     ImageUpload::make('site_logo', 'site')
                         ->label('Site Logo')
-                        ->helperText('PNG with transparent background. Crop before saving.'),
+                        ->helperText('Use a horizontal PNG (logo + name), ~400–600px wide. Or a square mark at least 128×128. Transparent background.'),
                     ImageUpload::make('site_favicon', 'site')
                         ->label('Favicon')
                         ->imageEditorAspectRatios(['1:1'])

@@ -31,7 +31,7 @@
                 <div class="col-span-2 lg:col-span-4">
                     <a href="{{ route('home') }}" class="inline-flex items-center gap-3 mb-5">
                         @if($logo)
-                            <img src="{{ $logo }}" alt="Pal Digital" class="h-12 lg:h-14 w-auto max-w-[220px] lg:max-w-[280px] object-contain object-left">
+                            @include('partials.site-logo', ['variant' => 'footer', 'logo' => $logo])
                         @else
                             <div class="w-10 h-10 bg-pal-yellow rounded-xl flex items-center justify-center font-extrabold text-pal-black">P</div>
                             <span class="font-display font-bold text-xl"><span class="text-pal-yellow">Pal</span> Digital</span>

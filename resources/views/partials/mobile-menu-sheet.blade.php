@@ -12,6 +12,12 @@
          @click.stop>
         <div class="w-10 h-1 bg-white/20 rounded-full mx-auto mt-3 mb-2"></div>
         <div class="px-5 pb-4">
+            @php $sheetLogo = \App\Models\SiteSetting::asset('site_logo'); @endphp
+            @if($sheetLogo)
+                <a href="{{ route('home') }}" @click="mobileSheet = false" class="inline-flex mb-4">
+                    @include('partials.site-logo', ['variant' => 'sheet', 'logo' => $sheetLogo])
+                </a>
+            @endif
             <h3 class="font-display font-bold text-lg mb-4">Explore</h3>
             <div class="grid grid-cols-2 gap-2">
                 @foreach([
