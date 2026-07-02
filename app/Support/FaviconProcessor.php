@@ -2,11 +2,29 @@
 
 namespace App\Support;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class FaviconProcessor
 {
     public static function applyCircleMask(string $path): string
+    {
+        if (! extension_loaded('gd')) {
+            Log::warning('FaviconProcessor: GD extension is not installed — skipping round favicon processing.');
+
+            return $path;
+        }
+
+        try {
+            return self::process($path);
+        } catch (\Throwable $e) {
+            Log::error('FaviconProcessor failed: ' . $e->getMessage(), ['path' => $path]);
+
+            return $path;
+        }
+    }
+
+    private static function process(string $path): string
     {
         $disk = Storage::disk('public');
 
@@ -28,6 +46,13 @@ class FaviconProcessor
         $outputSize = self::normalizeSize($cropSize);
 
         $dest = imagecreatetruecolor($outputSize, $outputSize);
+
+        if ($dest === false) {
+            imagedestroy($src);
+
+            return $path;
+        }
+
         imagesavealpha($dest, true);
         imagealphablending($dest, false);
         $transparent = imagecolorallocatealpha($dest, 0, 0, 0, 127);
@@ -43,18 +68,20 @@ class FaviconProcessor
         $newPath = preg_replace('/-round\.png$/', '', $path);
         $newPath = preg_replace('/\.[^.]+$/', '', $newPath) . '-round.png';
 
-        if ($disk->exists($newPath) && $newPath !== $path) {
-            $disk->delete($newPath);
+        imagealphablending($dest, false);
+        imagesavealpha($dest, true);
+
+        $fullNewPath = $disk->path($newPath);
+        $written = @imagepng($dest, $fullNewPath, 9);
+        imagedestroy($dest);
+
+        if (! $written || ! is_file($fullNewPath)) {
+            return $path;
         }
 
         if ($newPath !== $path && $disk->exists($path)) {
             $disk->delete($path);
         }
-
-        imagealphablending($dest, false);
-        imagesavealpha($dest, true);
-        imagepng($dest, $disk->path($newPath), 9);
-        imagedestroy($dest);
 
         return $newPath;
     }
@@ -93,9 +120,12 @@ class FaviconProcessor
 
         for ($x = 0; $x < $size; $x++) {
             for ($y = 0; $y < $size; $y++) {
-                $rgba = imagecolorsforindex($image, imagecolorat($image, $x, $y));
+                $rgba = imagecolorat($image, $x, $y);
+                $red = ($rgba >> 16) & 0xFF;
+                $green = ($rgba >> 8) & 0xFF;
+                $blue = $rgba & 0xFF;
 
-                if ($rgba['red'] <= 45 && $rgba['green'] <= 45 && $rgba['blue'] <= 45) {
+                if ($red <= 45 && $green <= 45 && $blue <= 45) {
                     imagesetpixel($image, $x, $y, imagecolorallocatealpha($image, 0, 0, 0, 127));
                 }
             }
@@ -120,9 +150,13 @@ class FaviconProcessor
                     imagesetpixel($image, $x, $y, $transparent);
                 } elseif ($distance > $radius - 1.5) {
                     $edgeAlpha = (int) (127 * min(1, ($distance - ($radius - 1.5)) / 1.5));
-                    $rgba = imagecolorsforindex($image, imagecolorat($image, $x, $y));
-                    $alpha = min(127, max($rgba['alpha'], $edgeAlpha));
-                    $color = imagecolorallocatealpha($image, $rgba['red'], $rgba['green'], $rgba['blue'], $alpha);
+                    $rgba = imagecolorat($image, $x, $y);
+                    $red = ($rgba >> 16) & 0xFF;
+                    $green = ($rgba >> 8) & 0xFF;
+                    $blue = $rgba & 0xFF;
+                    $alpha = ($rgba >> 24) & 0x7F;
+                    $alpha = min(127, max($alpha, $edgeAlpha));
+                    $color = imagecolorallocatealpha($image, $red, $green, $blue, $alpha);
                     imagesetpixel($image, $x, $y, $color);
                 }
             }

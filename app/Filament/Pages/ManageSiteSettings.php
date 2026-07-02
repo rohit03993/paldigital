@@ -103,9 +103,11 @@ class ManageSiteSettings extends Page implements HasForms
                     $path = UploadPath::fromFilamentState($value);
                     if ($path !== null) {
                         if ($key === 'site_favicon') {
-                            $path = FaviconProcessor::applyCircleMask($path);
+                            $processed = FaviconProcessor::applyCircleMask($path);
+                            SiteSetting::set($key, $processed);
+                        } else {
+                            SiteSetting::set($key, $path);
                         }
-                        SiteSetting::set($key, $path);
                     }
                 }
                 continue;
