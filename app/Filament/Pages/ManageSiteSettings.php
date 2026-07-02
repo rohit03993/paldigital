@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Filament\Forms\ImageUpload;
 use App\Models\SiteSetting;
+use App\Support\FaviconProcessor;
 use App\Support\UploadPath;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -53,10 +54,8 @@ class ManageSiteSettings extends Page implements HasForms
                 Forms\Components\Section::make('Brand & Logo')->schema([
                     ImageUpload::headerLogo('site_logo', 'site')
                         ->label('Header logo'),
-                    ImageUpload::make('site_favicon', 'site')
-                        ->label('Favicon')
-                        ->imageEditorAspectRatios(['1:1'])
-                        ->helperText('Square image, 32×32 or 64×64 PNG.'),
+                    ImageUpload::favicon('site_favicon', 'site')
+                        ->label('Favicon'),
                 ])->columns(2),
                 Forms\Components\Section::make('SEO Defaults')->schema([
                     Forms\Components\TextInput::make('site_url')
@@ -103,6 +102,9 @@ class ManageSiteSettings extends Page implements HasForms
                 } else {
                     $path = UploadPath::fromFilamentState($value);
                     if ($path !== null) {
+                        if ($key === 'site_favicon') {
+                            $path = FaviconProcessor::applyCircleMask($path);
+                        }
                         SiteSetting::set($key, $path);
                     }
                 }

@@ -46,4 +46,18 @@ class ImageUpload
             ->imageEditorEmptyFillColor('#000000')
             ->helperText('Upload → click the image → drag the crop box to select what shows in the header → confirm → Save.');
     }
+
+    public static function favicon(string $name, string $directory): FileUpload
+    {
+        return FileUpload::make($name)
+            ->image()
+            ->disk('public')
+            ->directory($directory)
+            ->avatar()
+            ->imageEditor()
+            ->imageEditorMode(3)
+            ->imageEditorAspectRatios(['1:1'])
+            ->imageEditorEmptyFillColor('#000000')
+            ->helperText('Upload → click → drag the round crop → confirm → Save. Always saved as a circle.');
+    }
 }
