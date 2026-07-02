@@ -20,8 +20,19 @@ Route::get('/sitemap.xml', \App\Http\Controllers\SitemapController::class)->name
 Route::get('/robots.txt', function () {
     $baseUrl = rtrim(\App\Models\SiteSetting::get('site_url', config('app.url')), '/');
 
-    return response("User-agent: *\nAllow: /\n\nSitemap: {$baseUrl}/sitemap.xml\n", 200, [
-        'Content-Type' => 'text/plain',
+    if (! str_starts_with($baseUrl, 'http')) {
+        $baseUrl = rtrim(config('app.url'), '/');
+    }
+
+    $content = implode("\n", [
+        'User-agent: *',
+        'Allow: /',
+        '',
+        'Sitemap: ' . $baseUrl . '/sitemap.xml',
+    ]);
+
+    return response($content . "\n", 200, [
+        'Content-Type' => 'text/plain; charset=UTF-8',
     ]);
 })->name('robots');
 

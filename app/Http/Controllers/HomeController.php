@@ -11,7 +11,6 @@ use App\Models\SeoMeta;
 use App\Models\Service;
 use App\Models\Solution;
 use App\Models\TeamMember;
-use App\Models\Testimonial;
 
 class HomeController extends Controller
 {
@@ -25,7 +24,6 @@ class HomeController extends Controller
             'industries' => Industry::active()->ordered()->get(),
             'flagship' => Solution::active()->where('is_flagship', true)->first(),
             'solutions' => Solution::active()->ordered()->get(),
-            'testimonials' => Testimonial::active()->limit(6)->get(),
             'clients' => Client::active()->get(),
         ]);
     }
