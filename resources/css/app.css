@@ -76,45 +76,54 @@
         @apply max-w-7xl mx-auto;
     }
 
-    /* Site logo — height-led sizing so square marks and horizontal wordmarks both work */
+    /* Site logo */
     .site-logo {
         @apply w-auto object-contain object-left shrink-0 block;
     }
 
-    .site-logo--header {
+    /* Header: crop + zoom top of square lockups (icon-only in nav) */
+    .site-logo-wrap--header {
+        @apply inline-flex shrink-0 overflow-hidden rounded-lg;
+        width: 2.75rem;
         height: 2.75rem;
-        max-width: min(58vw, 10.5rem);
     }
 
     @media (min-width: 640px) {
-        .site-logo--header {
-            height: 3rem;
-            max-width: 12rem;
+        .site-logo-wrap--header {
+            width: 3.25rem;
+            height: 3.25rem;
         }
     }
 
     @media (min-width: 1024px) {
-        .site-logo--header {
-            height: 3.5rem;
-            max-width: 18rem;
+        .site-logo-wrap--header {
+            width: 3.75rem;
+            height: 3.75rem;
         }
     }
 
+    .site-logo-wrap--header .site-logo--header {
+        @apply w-full max-w-none;
+        height: auto;
+        transform: scale(2.55);
+        transform-origin: top center;
+    }
+
     .site-logo--footer {
-        height: 2.75rem;
-        max-width: 12rem;
+        height: 4.5rem;
+        max-width: 11rem;
     }
 
     @media (min-width: 1024px) {
         .site-logo--footer {
-            height: 3.25rem;
-            max-width: 16rem;
+            height: 5.5rem;
+            max-width: 13rem;
         }
     }
 
     .site-logo--sheet {
-        height: 2.5rem;
-        max-width: 10rem;
+        height: 3.5rem;
+        max-width: 9rem;
     }
 
     .site-header-bar {
